@@ -2,3 +2,7 @@ _config.yml
 _site/*
 *Thumbs.db
 Gemfile.lock
+
+# emacs
+/#*.*/#
+.\#*.*
