@@ -5,33 +5,33 @@ paginate_path: "page:num"
 exclude: ["README.md"] # files to exclude
 highlighter: rouge
 markdown: kramdown
-disqus: dbyll
-google_analytics: dbyll
+#disqus: dbyll
+#google_analytics: dbyll
 
 defaults:
   -
     scope:
       path: "" # empty string for all files
     values:
-      title: dbyll
+      title: GrowMobily
 
-description: Stylish Jekyll Theme
+description: "We're cool app devs"
 author:
-  name: dbyll
-  email: dbyll@ismaildemirbilek.com
-  github: dbtek
-  twitter: dbtek
-  pinterest: asd123
-  linkedin: asd123
-  bio: Your stylish, minimalist theme!
-  email_md5: 726351295ec82e145928582f595aa3aa
+  name: Josh Freckleton
+  email: freckletonj@gmail.com
+  github: freckletonj
+  #twitter: dbtek
+  #pinterest: asd123
+  linkedin: https://www.linkedin.com/in/joshfreckleton
+  bio: "We make cool things, we make things cool!"
+  email_md5: 726351295ec82e145928582f595aa3aa #for some reason, this affects the logo image
 
 rss_path: feed.xml
 categories_path: categories.html
 tags_path: tags.html
 
 # set it as url of an image
-# sidebar_background_image: https://www.dropbox.com/s/g9h23zrycedxtk5/sky.png?raw=1
+#sidebar_background_image: https://www.dropbox.com/s/g9h23zrycedxtk5/sky.png?raw=1
 
 BASE_PATH:
 
