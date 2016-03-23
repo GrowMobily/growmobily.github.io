@@ -15,6 +15,7 @@ tagline:
 {% for project in site.projects %}
 {% assign c = 'c' | append:forloop.index %}
   <div class="caption {{c}}">
+    <b>{{ project.title }}</b>
     <p>{{ project.caption }}</p>
   </div>
 {% endfor %}

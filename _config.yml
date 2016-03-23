@@ -14,13 +14,15 @@ defaults:
     values:
       title: "" # not sure what this was
 
+permalink: /blog/:title
+      
 description: "We're cool app devs"
 author:
   name: Josh Freckleton
   business: Intelligence Ventures, Corp.
   email: freckletonj@gmail.com
   github: freckletonj
-  #twitter: dbtek
+  #twitter: x
   #pinterest: asd123
   linkedin: joshfreckleton
   bio: "we craft nice apps"

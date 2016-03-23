@@ -207,7 +207,9 @@ ul.dropdown-menu>li>a>i.fa {
 }
 
 .caption {
-    display: none;
+    height: 0;
+    opacity: 0;
+    transition: height .3s, opacity 0.3s linear;
 }
 
 
@@ -232,7 +234,8 @@ ul.dropdown-menu>li>a>i.fa {
 .t19:hover ~ .c19,
 .t20:hover ~ .c20
 {
-    display: block;
+    opacity: 1;
+    height: 2em;
 }
 
 .mug {
