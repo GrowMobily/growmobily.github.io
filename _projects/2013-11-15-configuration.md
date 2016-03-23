@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Configuration
+title: Once upon a time
 categories: [general, setup, demo]
 tags: [demo, dbyll, dbtek, setup]
 fullview: true

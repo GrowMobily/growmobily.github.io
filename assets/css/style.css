@@ -210,6 +210,7 @@ ul.dropdown-menu>li>a>i.fa {
     display: none;
 }
 
+
 .t1:hover ~ .c1,
 .t2:hover ~ .c2,
 .t3:hover ~ .c3,
@@ -232,4 +233,9 @@ ul.dropdown-menu>li>a>i.fa {
 .t20:hover ~ .c20
 {
     display: block;
+}
+
+.mug {
+    width: 80px;
+    height: 80px;
 }
