@@ -1,15 +1,37 @@
 @import url(http://fonts.googleapis.com/css?family=Ubuntu:500&subset=latin,latin-ext);
 
-body{
+body {
 	color: #2c3e50;
+
+    /* dotted background */
+    background-image: -webkit-repeating-radial-gradient(center center, rgba(0,0,0,.09), rgba(0,0,0,.09) 1px, transparent 1px, transparent 100%);
+    background-image: -moz-repeating-radial-gradient(center center, rgba(0,0,0,.09), rgba(0,0,0,.09) 1px, transparent 1px, transparent 100%);
+    background-image: -ms-repeating-radial-gradient(center center, rgba(0,0,0,.09), rgba(0,0,0,.09) 1px, transparent 1px, transparent 100%);
+    background-image: repeating-radial-gradient(center center, rgba(0,0,0,.09), rgba(0,0,0,.09) 1px, transparent 1px, transparent 100%);
+    -webkit-background-size: 7px 7px;
+    -moz-background-size: 7px 7px;
+    background-size: 7px 7px;
 }
+
 
 .sidebar {
 	position: fixed;
 	top: 0px;
 	padding-top: 10%;
-	background-color: #2c3e50;
-	color: #fff;
+	background-color: #fff;
+	color: #000;
+
+    /* dotted background */
+    background-image: -webkit-repeating-radial-gradient(center center, rgba(0,0,0,.09), rgba(0,0,0,.09) 1px, transparent 1px, transparent 100%);
+    background-image: -moz-repeating-radial-gradient(center center, rgba(0,0,0,.09), rgba(0,0,0,.09) 1px, transparent 1px, transparent 100%);
+    background-image: -ms-repeating-radial-gradient(center center, rgba(0,0,0,.09), rgba(0,0,0,.09) 1px, transparent 1px, transparent 100%);
+    background-image: repeating-radial-gradient(center center, rgba(0,0,0,.09), rgba(0,0,0,.09) 1px, transparent 1px, transparent 100%);
+    -webkit-background-size: 7px 7px;
+    -moz-background-size: 7px 7px;
+    background-size: 7px 7px;
+}
+.sidebar-container {
+    border-right: thin solid #e0e0e0;
 }
 
 .sidebar-header {
@@ -18,12 +40,11 @@ body{
 }
 .sidebar-header .title{
 	letter-spacing: 3px;
-	text-transform: uppercase;
 }
 
 .sidebar-header .title a{
 	text-decoration: none;
-	color: #fff;
+	color: #999;
 }
 
 a.nav-link {
@@ -46,10 +67,10 @@ a.nav-link:hover { color: #777 }
 #contact-list li .fa,
 article .share .btn {
 	-o-transition:color .2s ease-out, background 1s ease-in;
-  -ms-transition:color .2s ease-out, background 1s ease-in;
-  -moz-transition:color .2s ease-out, background 1s ease-in;
-  -webkit-transition:color .2s ease-out, background 1s ease-in;
-  transition:color .2s ease-out, background 1s ease-in;
+    -ms-transition:color .2s ease-out, background 1s ease-in;
+    -moz-transition:color .2s ease-out, background 1s ease-in;
+    -webkit-transition:color .2s ease-out, background 1s ease-in;
+    transition:color .2s ease-out, background 1s ease-in;
 }
 #contact-list li:hover .fa-twitter,
 article .share .twitter:hover {
@@ -82,8 +103,8 @@ article .share .gplus:hover {
 }
 
 .page-header {
-	color: #e74c3c;
-	text-shadow: 1px 1px 1px rgba(150, 150, 150, 1);
+	color: #333;
+
 }
 
 article{
@@ -91,8 +112,7 @@ article{
 }
 
 .article_body{
-	margin-top: 20px;
-	margin-bottom: 20px;
+	margin-bottom: 40px;
 }
 
 .post-date {
@@ -110,38 +130,26 @@ article.home div a:hover, article.home pre a:hover { color: #2c3e50; text-decora
 article img { max-width: 100%; }
 
 h1,h2,h3,h4,h5,h6 { font-family: 'Ubuntu', sans-serif; }
-article.home h1,
-article.home h2,
-article.home h3,
-article.home h4,
-article.home h5,
-article.home h6 {
-	font-family: 'Ubuntu', sans-serif;
-	color: #f2756a;
-}
-
-article.home h1 a,
-article.home h2 a,
-article.home h3 a,
-article.home h4 a {
-	color: #f2756a;
-}
-article.home h1 a:hover,
-article.home h2 a:hover,
-article.home h3 a:hover,
-article.home h4 a:hover {
-	color: #e74c3c;
-}
 
 .author .author-image {
-  float: left;
-  margin-right: 20px;
+    float: left;
+    margin-right: 20px;
 }
 
 footer {
 	padding-top: 15px;
 	font-family: 'Ubuntu';
 }
+
+/* fix BS pager */
+.pager {
+    margin: 0;
+}
+.pager li>a {
+    border: none;
+    background: none;
+}
+
 
 /* nav-vertical-tabs component */
 .nav-tabs-vertical {
@@ -183,3 +191,45 @@ ul.dropdown-menu>li>a>i.fa {
     width: 1.3em;
 }
 
+/* projects thumbs and captions */
+.projects {
+   
+}
+
+.thumbs {
+    position: relative;
+}
+
+.thumb {
+    display: inline-block;
+    margin-right: 15px;
+    margin-bottom: 15px;
+}
+
+.caption {
+    display: none;
+}
+
+.t1:hover ~ .c1,
+.t2:hover ~ .c2,
+.t3:hover ~ .c3,
+.t4:hover ~ .c4,
+.t5:hover ~ .c5,
+.t6:hover ~ .c6,
+.t7:hover ~ .c7,
+.t8:hover ~ .c8,
+.t9:hover ~ .c9,
+.t10:hover ~ .c10,
+.t11:hover ~ .c11,
+.t12:hover ~ .c12,
+.t13:hover ~ .c13,
+.t14:hover ~ .c14,
+.t15:hover ~ .c15,
+.t16:hover ~ .c16,
+.t17:hover ~ .c17,
+.t18:hover ~ .c18,
+.t19:hover ~ .c19,
+.t20:hover ~ .c20
+{
+    display: block;
+}

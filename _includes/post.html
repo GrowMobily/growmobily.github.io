@@ -1,21 +1,45 @@
 <div class="page-header">
-  <h1>{{ page.title }} {% if page.tagline %}<small>{{page.tagline}}</small>{% endif %}</h1>
+  <div>
+    <span class="post-date" style="display:inline">
+      <small>{{page.date | date_to_string}}</small>
+    </span>
+    <h5 style="display:inline">
+      {{ page.title }}
+    </h5>
+    <span style="display:inline">
+     {% if post.shortinfo %}
+   - {{ post.shortinfo }}
+     {% endif %}
+    </span>
+  </div>
 </div>
-
-<article>
+<!-- <div>
+     <span class="post-date" style="display:inline">
+     <small>{{page.date | date_to_string}}</small>
+     </span>
+     <h5 style="display:inline">
+     <a href="{{ site.BASE_PATH }}{{ post.url }}">{{ post.title }}</a>
+     </h5>
+     <span style="display:inline">
+     {% if post.shortinfo %}
+   - {{ post.shortinfo }}
+     {% endif %}
+     </span>
+     </div> -->
+<div>
 
   <div class="col-sm-10">
-	<span class="post-date">
-	   {% assign d = page.date | date: "%d" | plus:'0' %}
-	   {{ page.date | date: "%B" }} 
-	   {% case d %}
+	<!-- <span class="post-date">
+	     {% assign d = page.date | date: "%d" | plus:'0' %}
+	     {{ page.date | date: "%B" }} 
+	     {% case d %}
 	     {% when 1 or 21 or 31 %}{{ d }}st,
 	     {% when 2 or 22 %}{{ d }}nd,
 	     {% when 3 or 23 %}{{ d }}rd,
 	     {% else %}{{ d }}th,
-	   {% endcase %}
-	   {{ page.date | date: "%Y" }}
-	</span>
+	     {% endcase %}
+	     {{ page.date | date: "%Y" }}
+	     </span> -->
 
 
 
@@ -29,28 +53,6 @@
 
 
     <hr/>
-    <!---------------------- Categories ---------------------->
-		{% unless page.categories == empty %}
-	<ul class="tag_box list-unstyled list-inline">
-	  <li><i class="fa fa-folder-open"></i></li>
-		  {% assign categories_list = page.categories %}
-		  {% if categories_list.first[0] == null %}
-			{% for category in categories_list %} 
-	  <li><a href="{{ site.BASE_PATH }}/{{ site.categories_path }}#{{ category }}-ref">
-					{{ category | join: "/" }} <span>({{ site.categories[category].size }})</span>
-					{% unless forloop.last %},{% endunless %}
-	  </a></li>
-			{% endfor %}
-		  {% else %}
-			{% for category in categories_list %} 
-	  <li><a href="{{ site.BASE_PATH }}/{{ site.categories_path }}#{{ category[0] }}-ref">
-					{{ category[0] | join: "/" }} <span>/{{ category[1].size }})</span>
-	  </a></li>
-			{% endfor %}
-		  {% endif %}
-	</ul>
-		{% endunless %}
-
 
 
     <!---------------------- Tags ---------------------->
@@ -107,7 +109,7 @@
          </section>
 
          <section class="col-sm-6 author">
-         <img src="http://www.gravatar.com/avatar/{{site.author.email_md5}}" class="img-rounded author-image" />
+         <img src="" class="img-rounded author-image" />
          <h4 class="section-title author-name">{{site.author.name}}</h4>
          <p class="author-bio">{{site.author.bio}}</p>
          </section>
@@ -128,11 +130,11 @@
 		  {% endif %}
 	</ul>
 
-	<hr>
+
   </div>
   
   <div class="col-sm-2 sidebar-2">
 	
   </div>
-</article>
+</div>
 <div class="clearfix"></div>

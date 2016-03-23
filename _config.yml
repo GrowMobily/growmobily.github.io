@@ -1,7 +1,6 @@
 # visit https://github.com/mojombo/jekyll/wiki/Configuration for more settings
 
-paginate: 10 # pagination based on number of posts
-paginate_path: "page:num"
+title: growmobily
 exclude: ["README.md"] # files to exclude
 highlighter: rouge
 markdown: kramdown
@@ -13,27 +12,29 @@ defaults:
     scope:
       path: "" # empty string for all files
     values:
-      title: GrowMobily
+      title: "" # not sure what this was
 
 description: "We're cool app devs"
 author:
   name: Josh Freckleton
+  business: Intelligence Ventures, Corp.
   email: freckletonj@gmail.com
   github: freckletonj
   #twitter: dbtek
   #pinterest: asd123
-  linkedin: https://www.linkedin.com/in/joshfreckleton
-  bio: "We make cool things, we make things cool!"
-  email_md5: 726351295ec82e145928582f595aa3aa #for some reason, this affects the logo image
+  linkedin: joshfreckleton
+  bio: "we craft nice apps"
 
 rss_path: feed.xml
-categories_path: categories.html
 tags_path: tags.html
+
+collections:
+  - projects
 
 # set it as url of an image
 #sidebar_background_image: https://www.dropbox.com/s/g9h23zrycedxtk5/sky.png?raw=1
 
 BASE_PATH:
 
-gems:
-  - jekyll-paginate
+# gems:
+#   - jekyll-paginate
