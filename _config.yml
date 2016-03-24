@@ -7,6 +7,7 @@ markdown: kramdown
 #disqus: dbyll
 #google_analytics: dbyll
 
+pitch: "currently accepting new projects"
 defaults:
   -
     scope:
