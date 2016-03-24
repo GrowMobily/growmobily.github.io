@@ -8,6 +8,7 @@ description:
 
 # philosophy
 
+mock ups, my freebie!!!!!!!!!!!!!!!
 
 * 00 Philosophy
   * the joy of the journey
