@@ -1,13 +1,13 @@
 # Projects to include:
-* Honey Do Me
+* Honey Do - Honey Do Me
 * Priming Tools App
-* Content Analytics
-* Dubsado
+* E-commerce Optimization Tools - Content Analytics
+* CRM for small business - Dubsado
 * N-Gram Scraper
-* Prsnly
+* A Better Social media Platform - Prsnly
 * Gift Cards Form
-* Due Bills App
-* Frockhub
-* Food Truck App
+* Internal Processes App - Due Bills App
+* E-Retail Aggregator - Frockhub
+* A Failed Business Idea - Food Truck App
 * Matchipoo
-* Price Tracker
+* Pricetracker.co
