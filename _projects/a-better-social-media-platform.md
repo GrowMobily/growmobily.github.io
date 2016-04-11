@@ -7,6 +7,8 @@ thumb: assets/media/portfolio/thumb/prsnly.png
 caption: Yes. Objectively better. Just kidding. But it is pretty cool.
 ---
 
+![]({{ site.url }}/assets/media/portfolio/prsnly02.jpg){:height="300px"}
+
 ### Synopsis
 If you're anything like me, which you're probably not, then social media is a little... too much. This new Android/iOS (we developed the Android version) takes all of the good about social media, and throws away all of the "fat", leaving behind a simple, straightforward experience. It's about you, and your connections. Not what they had for dinner last night, or cheezy announcements. (That's all social media is otherwise, right? ;) )
 

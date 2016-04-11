@@ -7,6 +7,8 @@ thumb: assets/media/portfolio/thumb/matchipoo.png
 caption: Concentration and pattern-recognition, complete with a terrible app name
 ---
 
+![]({{ site.url }}/assets/media/portfolio/matchipoo01.png){:height="300px"} | ![]({{ site.url }}/assets/media/portfolio/matchipoo02.png){:height="300px"}
+
 ### Synopsis
 It's actually quite addicting.
 

@@ -7,6 +7,8 @@ thumb: assets/media/portfolio/thumb/contana.png
 caption: building web scrapers, and supporting backend
 ---
 
+![]({{ site.url }}/assets/media/portfolio/contentanalytics01.png){:height="120"}
+
 ### Brief synopsis
 This company provides tools for e-commerce optimization, and is such needs to interface with a lot of e-retail sites, such as Amazon. I crafted the tools for getting that data.
 

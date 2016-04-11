@@ -7,6 +7,8 @@ thumb: assets/media/portfolio/thumb/dubsado.png
 caption: Customer Relationship Management software for Small Businesses
 ---
 
+![]({{ site.url }}/assets/media/portfolio/dubsado01.png){:height="300px"}
+
 ### Synopsis
 When it comes to software, few tools are as essential (and complicated to build) as CRMs. Think "data everywhere". Just everywhere. This helps you organize and act on the important thigs.
 

@@ -6,6 +6,8 @@ thumb: assets/media/portfolio/thumb/foodtruck.png
 caption: Low-cost testing of a great idea
 ---
 
+![]({{ site.url }}/assets/media/portfolio/foodtruck01.png){:height="300px"}
+
 ### Synopsis
 This is my own, failed business attempt. So we can all safely poke fun.
 

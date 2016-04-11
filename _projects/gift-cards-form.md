@@ -7,6 +7,8 @@ thumb: assets/media/portfolio/thumb/cards.png
 caption: A simple solution that saved a businessman dozens of hours every month
 ---
 
+![]({{ site.url }}/assets/media/portfolio/afcgiftcards01.png){:height="300"}
+
 ### Synopsis
 Everyone has *some* tedium in their daily grind. Automating that is a powerful way of freeing oneself up for loftier ambitions. This client had to accept and process (by hand, of course) countless client's information every day as part of their process. Now he doesn't.
 

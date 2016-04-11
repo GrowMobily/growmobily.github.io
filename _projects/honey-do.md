@@ -6,6 +6,8 @@ thumb: assets/media/portfolio/thumb/honeydo.png
 caption: full-scale development of an app that unites couples
 ---
 
+![]({{ site.url }}/assets/media/portfolio/honeydo01.png){:height="300px"}
+
 ### Synopsis
 Honey Do is an Android/iOS app for couples. It allows two to create a game between each other of tasks and rewards, and get notified of their partner's flirtatious advances.
 

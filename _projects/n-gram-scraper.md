@@ -7,6 +7,8 @@ thumb: assets/media/portfolio/thumb/ngram.png
 caption: Builds a profile of the competition's website so you understand how to compete
 ---
 
+![]({{ site.url }}/assets/media/portfolio/keywords01.png){:height="300px"}
+
 ### Synopsis
 An `n-gram` is a contiguous string of words from some sentence. Ex: in `"Growmobily is Awesome"`, there are two 2-grams: `["Growmobily is", "is awesome"]`. Human speech/writing follows patterns where certain n-grams show up more frequently than others. If you analyze a competitors website, you can get a feel for what their main message is, and what customers they're targeting.
 

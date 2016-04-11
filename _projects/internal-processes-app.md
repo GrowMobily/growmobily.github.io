@@ -7,6 +7,8 @@ thumb: assets/media/portfolio/thumb/duebills.png
 caption: Automation of internal processes, everyone's happier!
 ---
 
+![]({{ site.url }}/assets/media/portfolio/duebills01.png){:height="300px"}
+
 ### Synopsis
 Automation of tedious processes seems to be a theme here. Hm. 
 

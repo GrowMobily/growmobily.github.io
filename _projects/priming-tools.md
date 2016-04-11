@@ -7,6 +7,8 @@ thumb: assets/media/portfolio/thumb/primingtools.png
 caption: an app for training and empowering leaders across industries
 ---
 
+![]({{ site.url }}/assets/media/portfolio/primingtools01.png){:height="300px"} | ![]({{ site.url }}/assets/media/portfolio/primingtools02.png){:height="300px"}
+
 ### Synopsis
 Growth-oriented business people need to keep mentally sharp, and this app helps them do that.
 
