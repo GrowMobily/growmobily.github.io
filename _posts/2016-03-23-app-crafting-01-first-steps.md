@@ -1,4 +1,5 @@
 ---
+published: false
 layout: post
 title: "app crafting: 01 - first steps"
 categories: [general]

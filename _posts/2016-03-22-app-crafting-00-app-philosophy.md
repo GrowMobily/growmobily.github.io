@@ -1,4 +1,5 @@
 ---
+published: false
 layout: post
 title: "app crafting: 00 - app philosophy"
 categories: [general]
