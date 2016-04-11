@@ -2,7 +2,7 @@
 layout: post
 title: A Failed Business Idea
 tags: [cross-platform, app, android, ios, ionic, angular, full-stack]
-thumb: http://placehold.it/40x40
+thumb: assets/media/portfolio/thumb/foodtruck.png
 caption: Low-cost testing of a great idea
 ---
 

@@ -3,7 +3,7 @@ layout: post
 title: N-Grams Scraper
 categories: [web-app]
 tags: [web-app]
-thumb: http://placehold.it/40x40
+thumb: assets/media/portfolio/thumb/ngram.png
 caption: Builds a profile of the competition's website so you understand how to compete
 ---
 

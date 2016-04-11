@@ -3,7 +3,7 @@ layout: post
 title: Internal Processes App
 categories: [web-app]
 tags: [web-app]
-thumb: http://placehold.it/40x40
+thumb: assets/media/portfolio/thumb/duebills.png
 caption: Automation of internal processes, everyone's happier!
 ---
 

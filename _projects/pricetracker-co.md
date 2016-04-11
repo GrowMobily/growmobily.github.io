@@ -3,7 +3,7 @@ layout: post
 title: PriceTracker.co
 categories: [web-app]
 tags: [web-app]
-thumb: http://placehold.it/40x40
+thumb: assets/media/portfolio/thumb/pricetracker.png
 caption: Track Amazon prices, buy stuff when the price dips!
 ---
 

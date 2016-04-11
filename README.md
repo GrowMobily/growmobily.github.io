@@ -1,6 +1,15 @@
 GrowMobily
 =====
 
+##Usage:
+exec $SHELL -l # this is related to my .bash_profile, which should be running "rbenv init -"
+jekyll serve # view on localhost:4000
+
+
+
+
+
+
 Open source stylish, minimalistic theme for jekyll.  
 Demo: http://dbtek.github.io/dbyll/
 

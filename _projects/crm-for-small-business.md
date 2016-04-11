@@ -3,7 +3,7 @@ layout: post
 title: CRM for SMB
 categories: [web-app]
 tags: [crm, web-app]
-thumb: http://placehold.it/40x40
+thumb: assets/media/portfolio/thumb/dubsado.png
 caption: Customer Relationship Management software for Small Businesses
 ---
 

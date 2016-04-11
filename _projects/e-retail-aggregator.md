@@ -3,7 +3,7 @@ layout: post
 title: E-Retail Aggregator
 categories: [web-app]
 tags: [web-app]
-thumb: http://placehold.it/40x40
+thumb: assets/media/portfolio/thumb/frock.png
 caption: Bringing the shopping experience from many stores, into one app
 ---
 

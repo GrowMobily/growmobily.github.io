@@ -9,7 +9,7 @@ tagline:
 {% for project in site.projects %}
 {% assign t = 't' | append:forloop.index %}
     <div class="thumb {{t}}">
-      <a href="{{ site.BASE_PATH }}{{ project.url }}"><img src="{{project.thumb}}"/></a>
+      <a href="{{ site.BASE_PATH }}{{ project.url }}"><img height="40" src="{{project.thumb}}"/></a>
     </div>
 {% endfor %}
 

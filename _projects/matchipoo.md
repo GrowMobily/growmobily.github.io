@@ -3,7 +3,7 @@ layout: post
 title: Matchipoo
 categories: [app]
 tags: [angular, cross-platform, app]
-thumb: http://placehold.it/40x40
+thumb: assets/media/portfolio/thumb/matchipoo.png
 caption: Concentration and pattern-recognition, complete with a terrible app name
 ---
 
