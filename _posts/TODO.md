@@ -20,11 +20,27 @@
   * 3. If you found you were wrong, what would it cost you?
 * language = we can communicate our ideas to each other
 * science = we can communicate objective ideas to each other
+
+## Behaviorism
+
+* high-level reference: http://danielbayn.com/deep-magic-of-behaviorism/
+* V.R. +Reward for desired +behavior
+* Continuous punishment for bad +behavior
+* For learning new behavior, VR of 1:1 (ie continuous), and gradually increase 1:X
+
   
-## Things that Surprise Me
+## Things that Surprise Me + Beliefs I've Updated + Expectation Violations
 * If you told me about the lottery, I'd've said no one would do it
 * If you told me the human race was intelligent enough to put computers in orbit around the planet, I'd've guessed that religion would be all but disappeared
+* Bad attention is about inability to *direct* your attention, 
+* Money isn't the most important
+* Happiness isn't the most important
+* Nutrition - WFPB is better than the western diet I was raised on
+* Beard is ok
+* Family isn't the most important
 * 
+
+## we're not the end product of a simulated universe
 
 ## Mystery
 * mysteries are what inspires
@@ -39,6 +55,13 @@
     *  paypal-new world currency
     *  elon musk - energy, existential crises
 *  Happiness isn't acquired externally
+
+# Passive Income Success Stories
+
+* submithub
+* park.io
+* indiehackers.com
+* 
     
 
 ## Tea
@@ -110,6 +133,13 @@
 
 ; => "HAPPY"
 ```
+
+# Clojure efficiency
+
+* macros for code gen anywhere
+* key bindings for use in chrome: eg, console.log the state atom
+* code quality tools, eg generate a pretty log of TODOs, FIXMEs, OPTIMIZEs, HACK, REVIEW, etc.
+* visualize a web of the code
 
 # Velocity vs. Position
 
@@ -852,6 +882,17 @@ http://stackoverflow.com/questions/40034152/how-do-i-handle-input-elements-in-cl
     (>>= io-read io-prn)))
 
 ((io-echo))
+```
+
+## Pixel Tracker
+
+* White Pixel, base 64 : `"R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"`
+* more stuff you can grab
+
+```
+$ip = $_SERVER['REMOTE_ADDR'];
+$referer = $_SERVER['HTTP_REFERER'];
+$useragent = $_SERVER['HTTP_USER_AGENT'];
 ```
 
 
