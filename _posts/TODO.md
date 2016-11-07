@@ -1102,6 +1102,43 @@ $useragent = $_SERVER['HTTP_USER_AGENT'];
 
 ```
 
+
+## Clojure core.async
+```
+(let [f (fn [x ch] (go (Thread/sleep (rand 100))
+                                (>! ch x)))
+      a (chan)
+      b (chan)
+      c (chan)]
+  (println "----------")
+  (f 1 a)
+  (f 2 b)
+  (f 3 c)
+  (Thread/sleep 200) ; if this is commented out, it returns the
+                     ; `:default` every time. If the thread *does*
+                     ; sleep, then it returns the `a` channel's `1`
+                     ; every time
+  (let [[n ch2] (alts!! [a b c]
+                        :default 42
+                        :priority true
+                        )]
+    (println "recieved: " n)))
+```
+
+```
+(let [a (chan)
+      b (chan)
+      c (chan)
+      t (timeout 50)]
+  (go (>! a "Apple"))
+  (go (>! b "Banana"))
+  (go (>! c "Carrot"))
+  (go (alt! [a b c t] ([v] (println v))
+            :priority true)))
+```
+
+
+
 ## Clojure Buddy JSON Signatures
 
 * shows:
@@ -1122,6 +1159,11 @@ $useragent = $_SERVER['HTTP_USER_AGENT'];
   (jwt/unsign x pub {:alg :rs256
                      :now (t/plus (t/now) (t/seconds -100))}))
 ```
+
+# Easy Posts
+  * Repurpose my old questions and code examples:
+    * Stackoverflow
+    * ClojureDocs
 
 # Nootropics
 
