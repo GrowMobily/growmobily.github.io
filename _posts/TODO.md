@@ -1158,6 +1158,29 @@ $useragent = $_SERVER['HTTP_USER_AGENT'];
             :priority true)))
 ```
 
+```
+;; Kill signal to loopp
+(comment
+  (def a> (chan 20))
+  (def kill> (chan))
+
+  (go (loop [coll (alts! [kill> a>] :priority true)]
+        (let [[x ch] coll]
+          (cond
+            (= ch kill>) (println "kill signal recieved")
+            (nil? x)     (println "a> closed")
+            :else        (do (println "val: " x)
+                             (<! (timeout 100)) ; anti-freeze
+                             (recur (alts! [kill> a>] :priority true)))))))
+  (go (loop []
+        (<! (timeout 200)) ; anti-freeze
+        (>! a>  (rand 100))
+        (println "i put it")
+        (recur)))
+  (go (>! kill> :die))
+  (close! a>)
+  (go (println (<! a>)))
+  )```
 
 
 ## Clojure Buddy JSON Signatures
