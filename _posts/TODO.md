@@ -928,3 +928,312 @@ $useragent = $_SERVER['HTTP_USER_AGENT'];
 
 ### My Emacs
 * ace-jump-mode - C-C SPC
+
+
+
+### Clojure - Component vs. Mount
+```
+;; # Mount Example
+
+(ns try-component.core
+  (:require [clojure.core.async :as async]
+            [mount.core :as mount :refer [defstate]]
+
+            [clojure.java.jdbc :as j]
+            [hikari-cp.core :as hik]
+            [honeysql.core :as sql]))
+
+
+(def datasource-options {:auto-commit        true
+                         :adapter            "postgresql"
+                         :read-only          false
+                         :connection-timeout 30000
+                         :validation-timeout 5000
+                         :idle-timeout       600000
+                         :max-lifetime       1800000
+                         :minimum-idle       10
+                         :maximum-pool-size  10
+                         :pool-name          "db-pool"
+                         :register-mbeans    false
+                         :server-name        "localhost"
+                         :port-number        5432
+                         :database-name      "test-clj-duct"
+                         :username           "postgres"
+                         :password           "pass"})
+
+(defstate ^:dynamic *db*
+  :start (hik/make-datasource datasource-options)
+  :stop (hik/close-datasource *db*))
+
+(mount/start)
+
+(println
+ (j/query {:datasource *db*} (sql/format {:select [:*]
+                                          :from   [:testing]})))
+(mount/stop)
+```
+------------------------------
+```
+;; # Component example
+
+(defrecord Database [datasource-options connection]
+  component/Lifecycle
+  (start [this]
+    (let [conn (hik/make-datasource datasource-options)]
+      (assoc this :conn conn)))
+  (stop [this]
+    
+    (hik/close-datasource (:conn this))
+    (assoc this :conn nil)))
+
+(defn new-database [datasource-options]
+  (map->Database {:datasource-options datasource-options}))
+
+(defn select-all [conn]
+  (j/query {:datasource (:conn conn)} (sql/format {:select [:*] :from [:testing]})))
+
+(defrecord Main [db]
+  component/Lifecycle
+  (start [this]
+    (println (select-all db))
+    this)
+  (stop [this]
+    this))
+(defn main-component []
+  (map->Main {}))
+
+(def system-components [:db :main])
+
+(defrecord MainSystem [db main]
+  component/Lifecycle
+  (start [this] (component/start-system this system-components))
+  (stop  [this] (component/stop-system this system-components)))
+
+(defn main-system [config]
+  (let [{:keys [datasource-options]} config]
+    (map->MainSystem
+     {:db (new-database datasource-options)
+      :main (component/using
+             (main-component)
+             {:db :db})})))
+
+(def system (main-system {:datasource-options (read-string (env :datasource-options))}))
+(alter-var-root #'system component/start)
+(alter-var-root #'system component/stop)
+
+;; ----------
+
+(defn main-system-2 [config]
+  (let [{:keys [datasource-options]} config]
+    (component/system-map
+     :db (new-database datasource-options)
+     :main (component/using
+            (main-component)
+            {:db :db}))))
+            
+;; ----------
+
+(defn main-system-3 [config]
+  (let [{:keys [datasource-options]} config]
+    (-> (component/system-map
+         :db (new-database datasource-options)
+         :main (main-component))
+        (component/system-using
+         {:main {:db :db}}))))
+
+```
+
+
+## Clojure Protocols + Records
+
+```
+
+;; a protocol defines functions you can call on records/maps which
+;; implement the protocol. All Shapes (according to this) have fns:
+;; `area`, and `perimeter`. `this` represents the record/map.
+(defprotocol Shape
+  (area [this])
+  (perimeter [this]))
+
+;; you can extend the protocol `Shape` like this:
+(defrecord RightTriangle [a b]
+  Shape
+  (area      [this] (-> a (* b) (/ 2)))
+  (perimeter [this] (-> a               ; this just solves `a + b + c`
+                        (* a)
+                        (+ (* b b))
+                        Math/sqrt
+                        (+ a b))))
+
+;; try it out, here's two methods for constructing records
+(let [t (RightTriangle. 3 4)]
+  {:area      (area t)
+   :perimeter (perimeter t)})
+
+;; same semantics as the above construction. Clojure automatically
+;; provides the `map->X` fn
+(let [t (map->RightTriangle {:a 3 :b 4})]
+  {:perimeter (perimeter t)
+   :area      (area t)})
+
+;; you can also extend the protocol for multiple records at once
+(defrecord Rectangle [a b])
+(defrecord Circle [r])
+
+(extend-protocol Shape
+  Rectangle
+  (area      [{:keys [a b]}] (* a b))
+  (perimeter [{:keys [a b]}] (+ a a b b))
+
+  ;; notice, circle needs an `r` instead. polymorphism ftw!
+  Circle
+  (area      [{:keys [r]}] (* r r 3.1415))
+  (perimeter [{:keys [r]}] (* 2 r 3.1415)))
+
+;; try it out:
+(let [r (Rectangle. 6 7)]
+  {:area      (area r)
+   :perimeter (perimeter r)})
+(let [c (map->Circle {:r 5})]
+  {:area      (area c)
+   :perimeter (perimeter c)})
+
+
+;; you can add arbitrary keys
+(assoc (Circle. 5) :hi :there)
+
+;; you can extend them again with another protocol
+(defprotocol IsRound?
+  (is-round? [this]))
+
+(extend-protocol IsRound?
+  Circle
+  (is-round? [_] true)
+
+  Rectangle
+  (is-round? [_] false))
+
+;; try it out:
+(let [c (Circle. 5)
+      r (Rectangle. 1 2)]
+  {:c (is-round? c)
+   :c-area (area c)
+   :r (is-round? r)
+   :r-perimeter (perimeter r)})
+
+```
+
+
+## Clojure core.async
+```
+(let [f (fn [x ch] (go (Thread/sleep (rand 100))
+                                (>! ch x)))
+      a (chan)
+      b (chan)
+      c (chan)]
+  (println "----------")
+  (f 1 a)
+  (f 2 b)
+  (f 3 c)
+  (Thread/sleep 200) ; if this is commented out, it returns the
+                     ; `:default` every time. If the thread *does*
+                     ; sleep, then it returns the `a` channel's `1`
+                     ; every time
+  (let [[n ch2] (alts!! [a b c]
+                        :default 42
+                        :priority true
+                        )]
+    (println "recieved: " n)))
+```
+
+```
+(let [a (chan)
+      b (chan)
+      c (chan)
+      t (timeout 50)]
+  (go (>! a "Apple"))
+  (go (>! b "Banana"))
+  (go (>! c "Carrot"))
+  (go (alt! [a b c t] ([v] (println v))
+            :priority true)))
+```
+
+
+
+## Clojure Buddy JSON Signatures
+
+* shows:
+  * how to store keys/pass *outside* of repo
+  * set an expiration
+  * if expired, you can still unsign it by setting `:now`
+  * note that because of US export laws, `buddy` will not automatically allow you to work with keys beyond 128 bits of protection
+  
+```
+(let [pass      (slurp "/home/josh/.keys/trackit/priv_key_password")
+      priv-path "/home/josh/.keys/trackit/auth_privkey.pem"
+      pub-path  "/home/josh/.keys/trackit/auth_pubkey.pem"
+      priv      (private-key priv-path pass)
+      pub       (ks/public-key pub-path)
+      x         (jwt/sign {:a 1} priv
+                          {:alg :rs256
+                           :exp (t/plus (t/now) (t/seconds -1))})]
+  (jwt/unsign x pub {:alg :rs256
+                     :now (t/plus (t/now) (t/seconds -100))}))
+```
+
+# Easy Posts
+  * Repurpose my old questions and code examples:
+    * Stackoverflow
+    * ClojureDocs
+
+# Nootropics
+
+*  Intranasal Insulin
+   *  Tip: only use one drug at a time when testing it. safer. and you'll learn it's unique impact
+   *  LostFalco: Intranasal Insulin
+      http://www.lostfalco.com/intranasal-insulin/
+   *  **Is there an effect of intranasal insulin on development and behaviour in Phelan-McDermid syndrome?**
+      http://www.nature.com/ejhg/journal/vaop/ncurrent/full/ejhg2016109a.html
+      "significant for cognition and social skills, for children older than 3 years, who usually show a decrease of developmental growth"
+   *  **Differential Sensitivity of Men and Women to Anorexigenic and Memory-Improving Effects of Intranasal Insulin**
+      http://press.endocrine.org/doi/pdf/10.1210/jc.2007-2606
+      *Dose*: 160 IU before experiment
+      "anorexigenic effects in men, less in women"
+      "beneficial effect on memory in women is more pronounced than in men"
+   *  **Early intranasal insulin therapy halts progression of neurodegeneration: progress in Alzheimer’s disease therapeutics**
+      https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4743662/
+      https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3260944/ ;; this is the main paper
+      *Dose*: 2x10-20IU/day; studied over 4 months
+      "Significant improvements in learning, memory, and cognition occured within a few months [on INI]"
+      "Improvements in performance correlated with correction of [alzheimer's] biomarkers"
+      "INI subverts systemic side-effects of insulin"
+   *  **Intranasal insulin improves memory in humans.**
+      https://www.ncbi.nlm.nih.gov/pubmed/15288712
+      *Dose*: 4x40 IO/d, 8 weeks
+      delayed recal improved
+      subject-reported: reduction in anger, enhanced confidence
+   *  **Brain Insulin Signaling and Alzheimer's Disease: Current Evidence and Future Directions**
+      https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3443484/
+      "indulin receptors in the brain are found in high densities in the hippocampus"
+      "insulin mitigates [...] vulnerability to amyloid beta, and inhibits the phosphorylation of tau"
+   *  **Intranasal insulin improves memory in humans: superiority of insulin aspart.**
+      https://www.ncbi.nlm.nih.gov/pubmed/16936707
+      Regular Human Insulin (RH-I) vs. rapid acting Insulin Analog Insulin Aspart (ASP-I)
+      Memory function: Both work acutely (40 IU), and long-term (4x40 IU x 8 weeks)
+      ASP-I is better
+   *  **Insulin given intranasally induce hypoglycaemia in normal and diabetic subjects**  
+      http://www.bmj.com/content/284/6312/303.abstract
+      intra-nasal vs. intra-venous
+      induces hypoglycemia
+   *  **Central Nervous System Delivery of Intranasal Insulin: Mechanisms of Uptake and Effects on Cognition.**
+      https://www.ncbi.nlm.nih.gov/pubmed/26401706
+      intra-nasal is a good delivery path, and has no peripheral metabolic effects
+   *  long-term effects?
+      *  https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3303591/
+         "Brain IR subunits differ from peripheral ones by the slightly lower molecular weight and by the absence of downregulation after exposure to high insulin levels [20, 41, 42]"
+      *  **Insulin and insulin-like growth factor receptors in the nervous system.**
+         https://www.ncbi.nlm.nih.gov/pubmed/2553069
+         "one report utilizing cortical cell preparations from mice indicated that a high ambient insulin concentration actually increased insulin receptor number (Van Schravendijk et al., 1984)"
+   *  **Central insulin administration improves whole-body insulin sensitivity via hypothalamus and parasympathetic outputs in men.**
+      https://www.ncbi.nlm.nih.gov/pubmed/25028522
+      
