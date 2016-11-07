@@ -1,3 +1,11 @@
+# Blog Purpose + Strategy
+* Purpose: networking? passive income? esteem? human-connection?
+* Strategy:
+    * post types: code. assessment of startups. philosophy. AI. experiments. health. nootropics. rationality. behaviorism. sales.
+
+# Emacs Org-mode tips
+* write this cuz I want to learn it!
+
 # Miscellaneous
 * passwords
 * mouse-avoidance
@@ -38,11 +46,12 @@
 * Nutrition - WFPB is better than the western diet I was raised on
 * Beard is ok
 * Family isn't the most important
-* 
+* Donating organs is a bit sketch. They'll harvest you while you're still alive (you needa be, lest your organs necrose)
 
 ## we're not the end product of a simulated universe
+* which is more likely: 1. the universe is simulated, 2. the universe is simulated *and* we're the things the "creators" were interested in making
 
-## Mystery
+## Mystery + Curiosity
 * mysteries are what inspires
 * Peter Thiel divides things into easy goals, hard goals, impossible goals
 * people frequently think hard things are solved, so all that's left is boring easy, and impossible
