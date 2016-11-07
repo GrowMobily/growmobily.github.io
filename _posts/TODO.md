@@ -108,6 +108,9 @@
 * Amoralism
 * The Word "Should"
 * Emotivism - right, wrong, should, ought, responsibility, obligation
+  * drugs - highly depend on context
+  * love - there's a line between adorable fawning and creepy fawning, and it's just the context of the pursuee's mind
+  * 
 
 # Meditation/Cognition
 
@@ -818,6 +821,15 @@ http://stackoverflow.com/questions/40034152/how-do-i-handle-input-elements-in-cl
 ## Function composition composition (.).(.)
     http://adit.io/imgs/lenses/inception.jpg
     http://i.imgur.com/5kaxrvW.jpg
+
+    let c = (.) . (.)
+    (c (+) (*)) 9 8 7 == 79 == 9*8 + 7
+
+    (.) :: (b -> c) -> (a -> b) -> (a -> c)
+    (.) :: (d -> e) -> (c -> d) -> (c -> e)
+    ... :: (de-cd-ce)-(bc-ab-ac)
+    ... :: 
+
     user=> (def a (comp inc (partial * 2)))
     user=> (a 3)
     7
