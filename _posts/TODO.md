@@ -1180,7 +1180,10 @@ $useragent = $_SERVER['HTTP_USER_AGENT'];
   (go (>! kill> :die))
   (close! a>)
   (go (println (<! a>)))
-  )```
+  )
+```
+
+* Note: `go` blocks return channels that have something put on them when the block completes
 
 
 ## Clojure Buddy JSON Signatures
@@ -1210,6 +1213,9 @@ $useragent = $_SERVER['HTTP_USER_AGENT'];
     * ClojureDocs
 
 # Nootropics
+* Therapeutic Index vs Toxic Index
+  * Make a freakin table
+  * Include: Nutmeg, Alcohol, acetominophen, aspirin, etc.
 
 *  Intranasal Insulin
    *  Tip: only use one drug at a time when testing it. safer. and you'll learn it's unique impact
@@ -1260,3 +1266,226 @@ $useragent = $_SERVER['HTTP_USER_AGENT'];
    *  **Central insulin administration improves whole-body insulin sensitivity via hypothalamus and parasympathetic outputs in men.**
       https://www.ncbi.nlm.nih.gov/pubmed/25028522
       
+# Notes: Functional Design Patterns - Stuart Sierra
+
+https://www.youtube.com/watch?v=etr08mExAI0
+https://github.com/strangeloop/strangeloop2012/blob/master/slides/sessions/Sierra-FunctionalDesignPatterns.pdf
+
+* State/Event Pattern
+* Consequences Pattern
+  * inputs cause multiple state changes / side-effects
+  * pure function returns declaration of what events will happen next
+* Data Building
+  * Accumulator Pattern
+    * map, reduce, filter, mapcat
+  * Reduce / Combine pattern
+    * input is tree-like
+    * combining intermediate results is associative
+    * reduce + a combine-fn (easy to parallelize)
+  * Recursive Expansion
+    * build result out of primitives
+    * build abstractions in layers
+    * recurse until no work left (IE output = input)
+    * (eg macroexpansion)
+* Flow Control Pattern
+  * Pipeline Pattern
+    * process with many discrete steps
+    * similar shape of data at each step
+    * one execution path, can't branch
+  * Wrapper pattern
+    * process with many discrete steps
+    * one main execution path
+    * possible branching at each step
+    ```
+    (defn wrapper [f]
+      (fn [input]
+          ;; ... before ...
+          (f input)
+          ;; ... after ...
+          ))
+    (-> original-fn wrapper-a wrapper-b wrapper-c)
+    ```
+  * Token Pattern
+    * May need to cancel an operation
+    * Operation itself is not an identity
+    * returns it's own "undo" fn
+    ``` 
+    (defn begin [target & args]
+      ;; ... begin operation or create state in target ...
+      
+      ;; Return a function:
+      (fn []
+        ;; ... cease operation or destroy state ...
+        ))
+    ```
+    * Clojure `watch` (???)
+  * Observer Pattern
+    * ```(observer container old-state new-state)```
+    * ```(observer old-state new-state delta)```
+  * Strategy Pattern
+    * Many processes with a similar structure
+    * need extension points for future variations
+    * especially `protocols`
+
+# I Blame My Tools
+* in a good way
+* technology is the lever, a tool is technology-implemented
+
+
+# Clojure, monadic (?) merge-with-maps
+```
+(def a {:x "X" :y "Y" :s "Apple"})
+(def b {:x "X" :y "Y" :s "Banana"})
+(def c {:x "X" :y "Y" :s "Crayon"})
+  
+(def fns [(fn [coll new]
+            (-> coll
+                (update :selectors (fn [x] (conj (vec x) (:s new))))
+                (dissoc :s)))
+          (fn [coll new]
+            (-> coll
+                (update :x (fn [x] (str x (:x new))))))])
+
+(defn merge-with-fns [fns start & maps]
+  (reduce
+   (fn [coll new] (reduce (fn [c f] (f c new)) coll fns))
+   start
+   maps))
+
+(merge-with-fns fns (dissoc a :x) a b c c)
+```
+
+# MVP Advocacy
+
+# Clojure Advocacy
+* Two Months Early, 300k Under budget
+  https://www.thoughtworks.com/insights/blog/two-months-early-300k-under-budget
+* Walmart Runs Clojure At Scale
+  http://blog.cognitect.com/blog/2015/6/30/walmart-runs-clojure-at-scale
+* Boeing - One of the largest codebases
+  https://www.youtube.com/watch?v=iUC7noGU1mQ
+* Unified Front End / Back End
+* Dev Time, Maintenance, Reliability, Ease of Extension,
+* JVM / Java interop
+* Paul Graham's advocacy - argument from authority
+* Video of me getting shit done
+* **Why you** *shouldn't* **use Clojure**
+  * Preempt : hiring, 
+
+# Prolog
+* Tinker!
+
+# Clojure core.logic
+## Map, Reduce, Filter
+```
+;; REDUCE ----------
+
+(defn reducef [f base coll]
+  (if (empty? coll)
+    base
+    (reducef f
+             (f base (first coll))
+             (rest coll))))
+(reducef + 0 [1 2 3])
+
+(defn reduceo [relo base coll answer]
+  (conde
+   [(emptyo coll) (== answer base)]
+   [(fresh [new-coll new-base fst]
+      (firsto coll fst)
+      (resto coll new-coll)
+      (relo base fst new-base)
+      (reduceo relo new-base new-coll answer))]))
+(run 10 [q]
+  (reduceo fd/+ 42 [1 2 3 q] 52))
+(run 10 [q]
+  (reduceo fd/+ 42 [1 2 3 4] q))
+(run 10 [q]
+  (reduceo fd/+ q [1 2 3 4] 52))
+
+;; MAP ----------
+
+(defn mapf [f coll]
+  (reducef (fn [m x] (conj m (f x))) [] coll))
+(mapf inc [1 2 3])
+
+(defprotocol Mapo
+  (mapo-helper [coll relo answer]))
+
+(extend-protocol Mapo
+  clojure.lang.PersistentVector
+  (mapo-helper [coll relo answer] 
+    (reduceo (fn [coll x new-coll]
+               (fresh [x2]
+                 (relo x x2)
+                 (conjo coll x2 new-coll)))
+             [] coll answer)))
+
+(defn mapo
+  "flips `coll` to first position, so `extend-protocol` can dispatch
+  on it"
+  [relo coll answer]
+  (mapo-helper coll relo answer))
+
+(run 10 [q]
+  (mapo inco [1 2 3 4] q))
+(run 10 [q]
+  (mapo inco [1 2 3 q] [2 3 4 5]))
+
+;; FILTER ----------
+
+(defn filterf [f coll]
+  (reducef (fn [coll x] (if (f x)
+                          (conj coll x)
+                          coll))
+           []
+           coll))
+(filterf even? (range 10))
+
+(defprotocol Filtero
+  (filtero-helper [coll relo answer]))
+(extend-protocol Filtero
+    clojure.lang.PersistentVector
+    (filtero-helper [coll relo answer]
+      (reduceo (fn [coll x new-coll]
+                 (condu
+                  [(relo x)
+                   (conjo coll x new-coll)]
+                  [(== coll new-coll)]))
+               [] coll answer)))
+(defn filtero [relo coll answer]
+  (filtero-helper coll relo answer))
+(run 10 [q]
+  (filtero eveno [1 2 3 4 5 6] q))
+
+;; ----------
+
+
+
+(defn inco [x a]
+  (fd/+ 1 x a))
+
+(let [f (fn [coll x a]
+          (fresh [x2]
+            (inco x x2)
+            (conjo coll x2 a)))]
+  (run 10 [q]
+    (reduceo
+     f
+     []
+     [1 2 3 4]
+     q)))
+
+;; ----------
+
+
+
+
+
+(defn eveno [n]
+  (fresh [a]
+    (conde
+     [(== 0 n)]
+     [(fd/+ 2 a n)
+      (eveno a)])))
+```
