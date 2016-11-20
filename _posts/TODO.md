@@ -1478,14 +1478,16 @@ https://github.com/strangeloop/strangeloop2012/blob/master/slides/sessions/Sierr
 
 ;; ----------
 
-
-
-
-
 (defn eveno [n]
   (fresh [a]
     (conde
      [(== 0 n)]
      [(fd/+ 2 a n)
       (eveno a)])))
+      
+;; M, R, F Sandbox ----------
+
+(run 10 [q]
+  (reduceo fd/+ 0 q 13)
+  (reduceo fd/* 1 q 30))
 ```
