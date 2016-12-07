@@ -269,6 +269,92 @@ return :
 
 `(((map inc) conj) [1 2] 3) ; => [1 2 4]`
 
+```
+(comment
+  RELATED fns
+  
+  sequence
+  map
+  mapcat
+  filter
+  remove
+  take
+  take-while
+  drop
+  drop-while
+  take-nth
+  distinct
+  replace
+  interpose
+  completing
+  transduce
+  partition-by
+  partition-all
+  map-indexed
+  keep
+  keep-indexed
+  cat
+  dedupe
+  random-sample
+  eduction)
+
+;; "Upgrade" a reducing function
+;;    container doesn't matter
+(((map inc) conj) [] 1) ; => [2]
+(((map inc) str) "" 1)  ; => "2"
+
+;; Reduce v Transduce on xforms
+(reduce   ((map inc) conj) [] [1 2 3]) ; => [2 3 4]
+(transduce (map inc) conj  [] [1 2 3]) ; => [2 3 4]
+
+;; Composition Order top/left-most first
+;;   (opposite of normal fn comp)
+(((comp (map inc)
+        (map (partial * 2)))
+  conj) [] 1) ; => [4]
+
+(((comp (map (partial * 2))
+        (map inc))
+   conj) [] 1) ; => [3]
+
+(transduce (comp (map inc) ;; notice composition is backwards from fn comp
+                 (filter even?)
+                 (map str)) conj [1 2 3])
+
+;; Eduction: runs an xform over a collection. The whole stack of
+;;   functions is executed against each element, as opposed to the
+;;   first function getting applied, then the result passed to the
+;;   second fn, and so on
+(eduction (map inc) [1 2 3])            ; => (2 3 4)
+(eduction (filter even?) (range 5))     ; => (0 2 4)
+(eduction (comp (filter even?)
+                (map inc))
+          (range 5))                    ; => (1 3 5)
+
+;;;; Custom xform and rf functions
+;; The Basics
+(comment
+  (let [xform (fn xform [rf])           ;=> new rf
+        rf    (fn rf [c x])]            ;=> new c
+    ((xform rf) collection value)))
+
+;; Example, notice the arity of the different fns
+(let [xform      (fn xform [rf]
+                   (fn duplicate        ; a new reducing fn
+                     ([] (rf))          ; 0-arity: returns an initial, probably empty collection
+                     ([x] x)            ; 1-arity: not sure what this does
+                     ([c x] (rf c [x x])))) ; 2-arity: a normal reducing function
+      
+      new-concat (fn new-concat
+                   ([] []) ; 0-arity: returns an initial collection, needed by `transduce`
+                   ([c x] (concat c x)))
+      rf         new-concat]      ; completing: adds a 0-arity version
+
+  ((xform rf) [] 1)                     ; => (1 1)
+  (transduce xform rf (range 3))        ; => (0 0 1 1 2 2)
+  (eduction xform (range 3)))           ; => ([0 0] [1 1] [2 2])
+```
+
 # Flow State
 * number windows meditation
 
@@ -1485,9 +1571,208 @@ https://github.com/strangeloop/strangeloop2012/blob/master/slides/sessions/Sierr
      [(fd/+ 2 a n)
       (eveno a)])))
       
-;; M, R, F Sandbox ----------
+;; Cool example ----------
 
 (run 10 [q]
   (reduceo fd/+ 0 q 13)
   (reduceo fd/* 1 q 30))
 ```
+
+# Morality from first Principles
+
+* values of creatures with values,
+* living things are the only entities to ascribe values to things, this is the starting point for morality
+* example
+  * in the trolley problem with a redirecting-lever, should you pull it?
+  * yes
+  * why?
+  * because I want to optimize for number of human lives
+  * should a person push a fat man to block the train?
+  * grrr, that's a bit harder
+  * ok, well, optimizing for human lives, should you pull the lever if the 10 ppl are nearly dead from old age anyways, and the one person is a young person?
+  * well, no then, so I want optimize, instead of for human lives, then for human-life-time
+  * ok, then say the 10 are vegetative humans, and the one is a young healthy person
+  * hrm, then I want to optimize for human-years*quality of life
+  * then should you sacrifice one healthy, unsuspecting organ donor to save 10 organ-needers?
+  * well no, free agency matters too, so, let's optimize for a function of human-years, quality, and freedom
+  * given those moral constraints, would it be justifiable for a person to temporarily hinder the quality of life, and freedom, of, say, 10 women by raping them, and therby introducing 10 new humans who have unhindered quality of life, and freedom?
+  * well, no, rape is bad... so let's say our moral consideration encompasses people who are alive now, and not future humans, and then the cost of decreased QoL and freedom is immoral
+  * given those constraints, say there was an addictive pill which exponentially increases the quality of life, and has the side effect of sterilizing a user. You have reason to believe that the pill is so addictive, that the world will, over a few generations, approach complete sterility, and the death of human kind. Should you introduce that pill? You'll maximize quality of life without hindering any of our other values...
+  * well, no, I guess future humans matter too...
+  * ok, so they at least get weighed differently, presumably, that's fine. So then, should you restrict freedom and quality of life by banning the pill, but ensuring future generations?
+  * well... that's tough
+  * if we're optimizing for human-life-time, and freedom, and QoL, is it morally justifiable for me to kill my pet for fun?
+  * certainly not.
+  * how about big game on an African safari?
+  * hm, less bad, but still no.
+  * how about chickens for food?
+  * sure
+  * So you're saying then that non-human life has value, and it presumably weighs less than human values
+  * that sounds fair
+  * so in the trolley problem, how about 10 cows versus one healthy human? How about a *million* cows vs one human.
+  * oo, also tough.
+  * how about your life vs a stranger? Let's revisit the trolley problem, only this time *you* are tagged for dead, but have a button that would divert the train toward a stranger, and no one will know if you decided to sacrifice them instead
+  * it's tempting to say I'd push that button
+  * so, it seems *your* values weigh presumably higher than a a stranger's values do, to you.
+  * hm, disappointingly so.
+  * How about abortion? Gun control? Religious extremisim, or even just bigotted speech?
+* I'm sure the careful reader's own projected choices diverged from this dialogue at points
+* So, how does one *begin* to approach a problem like this?
+* There's no objective answer. Even if you believe in a deity who professedly dictates an objective morality, it *still* gets interpreted through you and your values, and therefore is about *you* and *your* values and not a deity's objective morality.
+* There's no non-human answer (as of yet). Ie we're talking about what *we* humans should do, and not how animals (for ex) should behave toward us. If we value our interpretation of animal values, it's still *our* *human* values.
+* is something like our evolutionary heritage an answer? It explains *where* we came from, and explains *why* we have some of the values we have now. But all we have now *are* our values. So I would argue that evolution isn't a first principle to morality, even though it explains many of our inbred biases (tribalism, purity, honesty, don't kill (unless it's the outgroup), etc.), and can be important to understand.
+* Morality is a matter of human values - namely your own values - Let's start the discussion there.
+## Part 2: The Values we Would Wish we had if...
+* what would we want for ourselves we were smarter, thought faster, were more the people we wanted to be? 
+* What if we also wanted some social cohesion, so, what if we wanted to be more like who other people wanted us to be?
+## Part 3: Foray into Ultimate Values
+* Maybe don't do this one, could be kind of scary/foreign, and undermine the previous 2 parts
+* IIT
+* redundancy for fault tolerance, but other than that, no need for many identical representations
+* 
+
+# My first 100 lines of Haskell - Game of Life
+```
+import System.Random
+import Control.Monad (replicateM)
+import Data.Array (array, Array, (!))
+
+
+width  = 30
+height = 30
+
+data CellState = Alive | Dead deriving (Show, Eq)
+    
+randomCell :: IO CellState
+randomCell = do
+  x <- randomIO
+  return (if x then Alive else Dead)
+
+
+reshape :: Int -> Int -> [a] -> Array (Int, Int) a
+reshape w h xs = grid
+    where
+      locs = [(x,y) | x <- [0..(w-1)], y <- [0..(h-1)]]
+      grid = array ((0,0), ((w-1),(h-1))) (zip locs xs)
+
+-- assumes a Toroidal topology
+wrap :: (Int,Int) -> (Int,Int) -> (Int,Int)
+wrap (w,h) (x,y) = ((mod x w), (mod y h))
+      
+data World a = World {
+      worldCells :: (Array (Int,Int) a),
+      worldBounds :: (Int, Int)
+    } deriving (Show)
+
+             
+randomWorld :: Int -> Int -> IO (World CellState)
+randomWorld w h = do
+  cells <- replicateM (w * h) randomCell
+  return (World (reshape w h cells) (w,h))
+
+cellAt :: World a -> (Int, Int) -> a
+cellAt (World cells _) loc = cells ! loc
+
+mooreNeighbors = [(-1,-1), (0,-1), (1,-1),
+                  (-1, 0),         (1, 0),
+                  (-1, 1), (0, 1), (1, 1)]
+
+neighbors :: (Int,Int) -> [(Int,Int)]
+neighbors (x,y) = map (\(dx,dy) -> (x+dx,y+dy)) mooreNeighbors
+
+boundedNeighbors :: (Int,Int) -> (Int,Int) -> [(Int,Int)]
+boundedNeighbors bounds point = map (wrap bounds) (neighbors point)
+
+
+count :: Eq a => a -> [a] -> Int
+count x xs = length (filter (x==) xs)
+
+neighborsStates :: World CellState -> (Int,Int) -> [CellState]
+neighborsStates w (x,y) = map (\loc -> cellAt w loc) (boundedNeighbors (worldBounds w) (x,y))
+
+conwaysRules :: CellState -> Int -> CellState
+conwaysRules Dead n | n == 3 = Alive
+conwaysRules Alive n | n == 2 || n == 3 = Alive
+conwaysRules _ _ = Dead
+
+
+                   
+step :: World CellState -> World CellState
+step world@(World cells (w,h)) = World cells' (w,h)
+    where
+      cells' = reshape w h [conwaysRules (cells!(x,y)) (count Alive (neighborsStates world (x, y))) | x<-[0..w-1], y<-[0..h-1]]
+
+renderCell :: CellState -> String
+renderCell Alive = "#"
+renderCell Dead  = "."
+      
+renderWorld :: World CellState -> String
+renderWorld (World cells (w,h)) = foldl (++) "" [(if y==0 then "\n" else "") ++ (renderCell (cells!(x,y))) | x<-[0..w-1], y<-[0..h-1]] 
+
+start = do
+    a <- randomWorld width height
+    return a
+
+
+loop :: World CellState -> IO ()
+loop w = go w
+    where go world = do
+            line <- getLine
+            putStrLn (renderWorld world)
+            let nw = step world
+            if line == "q"
+            then return ()
+            else go nw
+    
+main = do
+  a <- start
+  loop a
+  return "end"
+
+```
+
+
+# Olog-Driven Development
+## Functorial Data Migration
+http://math.mit.edu/~dspivak/informatics/FunctorialDataMigration.pdf
+
+## Simplical Databases
+https://arxiv.org/abs/0904.2012
+
+## Databases are Categories
+http://blog.ezyang.com/2010/06/databases-are-categories/
+
+## CT as a Unifying Database Formalism
+http://math.mit.edu/~dspivak/informatics/notes/unorganized/CTDB--spivakCurino.pdf
+
+## Functional Query Languages
+http://wisnesky.net/dissertation.pdf
+
+##################################################
+
+# Thinking, in <5 Orthogonal Concerns
+## Programming, in <5 Orthogonal Concerns
+* Framework for reasoning needs to cover the entire terrain, while pieces remain orthogonal. If they're not orthogonal, you're complecting ideas and making them harder to reason about, therefore a better explanation exists.
+* One Concern - create human value
+* Many Concerns - loops, logic, control, syntax, semantics, tooling, environments, back/front end
+* <5 Concerns - candidates: relationships, data, functions (?), side-effects
+
+## Science
+* 1. Patterns repeat in the observable universe 2. They can be understood
+* A few: A small set of quantum particles are the "atoms" of all these patterns, and are governed by a small set of rules
+* Math, Physics, Chemistry, Biology, Physiology, Sociology, Psychology
+* A million technicalities of a million little subfields
+
+## Technology
+
+## Engineering
+
+## Math
+
+## Art
+
+
+
+# Human Value - 
+* the states of mind we apparently want to dwell in?
+* the states of mind we wish we wanted to dwell in? (I wish I wanted to not derive satisfaction by hating the church)
